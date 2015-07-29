@@ -13,7 +13,8 @@ public class Server {
     public static void main(String[] args) throws IOException {
         System.out.println("Server Simulator:");
         ObjectOutputStream a = (new ObjectOutputStream(System.out));
-        a.writeObject(loadCodeRepresentationFromSocket());
+        CodeRepresentation result = loadCodeRepresentationFromSocket();
+        a.writeObject(result);
     }
 
     private static CodeRepresentation loadCodeRepresentationFromSocket() throws IOException {
