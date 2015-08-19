@@ -1,6 +1,10 @@
 package client;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -10,15 +14,25 @@ import org.terasology.codecity.world.structure.CodePackage;
 import org.terasology.codecity.world.structure.CodeRepresentation;
 
 public class Client {
-    static public void main(String[] args) throws UnknownHostException, IOException {
+    static public void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         System.out.println("Client simulator");
         CodeRepresentation code = loadCodeRepresentationDefault();
         Socket client = new Socket("localhost", 25778);
         ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-        out.writeObject(code);
+        
+        if (args.length > 0 && args[0].compareTo("big") == 0)
+        	out.writeObject(getFromFile("output.out"));
+        else
+        	out.writeObject(code);
+        
         out.flush();
         client.close();
         System.out.println("data sended");
+    }
+    
+    private static CodeRepresentation getFromFile(String path) throws IOException, ClassNotFoundException {
+    	ObjectInputStream in = new ObjectInputStream(new FileInputStream(path));
+    	return (CodeRepresentation)in.readObject();
     }
     
     private static CodeRepresentation loadCodeRepresentationDefault() {
